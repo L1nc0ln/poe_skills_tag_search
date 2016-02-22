@@ -85,6 +85,7 @@ public class SkillMain extends Application{
 		Scene scene;
 		primaryStage.setTitle("PoE Skills Tag Search");
         
+		//Setup of the grid
 		GridPane grid = new GridPane();
 		grid.setAlignment(Pos.CENTER_LEFT);
 		grid.setHgap(H_GAP);
@@ -112,6 +113,8 @@ public class SkillMain extends Application{
 			tagCheckBoxes[counter] = new CheckBox(tags[counter]);
 		}
 		
+		//adds the checkboxes to the grid with their handlers. Two for loops since we have a different number
+		//of checkboxes in each row
 		int colCounter = CHECKBOXES_START_COL;
 		for(int rowCounter = 0; rowCounter < NUMBER_OF_CHECKBOX_ROWS; rowCounter ++){
 			for(int counter = END_INDEX_OF_CHECKBOX_ROWS[rowCounter]; counter < END_INDEX_OF_CHECKBOX_ROWS[rowCounter + 1]; counter++){
@@ -122,6 +125,7 @@ public class SkillMain extends Application{
 			colCounter = CHECKBOXES_START_COL;
 		}
 		
+		//adds our three separators
 		Separator separatorTagsButton = new Separator(Orientation.HORIZONTAL);
 		GridPane.setConstraints(separatorTagsButton, SEPARATOR_COL_START, SEPARATOR_TAG_BUTTON_ROW, SEPARATOR_COL_SPAN, SEPARATOR_ROW_SPAN);
 		grid.add(separatorTagsButton, SEPARATOR_COL_START, SEPARATOR_TAG_BUTTON_ROW);
@@ -151,6 +155,14 @@ public class SkillMain extends Application{
 	}
 	
 	
+	/**
+	 * attaches the actions for ticking a checkbox. If the checkbox gets ticket calls the
+	 * addCriterium Function to add the corresponding tag to the list, if the checkbox gets
+	 * unticked calls the removeCriterium function to remove the tag
+	 * @param tagName Name of the tag that belongs to the checkbox
+	 * @param checkBox the checkbox that gets ticked/unticked
+	 * @param skillFilter the instance of the skillFilter class responsible for storing the list of ticked tags
+	 */
 	private void addCheckBoxHandler(String tagName, CheckBox checkBox, SkillFilter skillFilter){
 		final String tagNameFinal = tagName;
 		final CheckBox checkBoxFinal = checkBox;
@@ -167,6 +179,15 @@ public class SkillMain extends Application{
 	    });
 	}
 	
+	
+	/**
+	 * Removes the accordion if there was one before, then gets the list of skills that fit
+	 * the checked tags. Next all skills get added to an array with all their information
+	 * like description, link to wiki. In the end it adds the array to the (new) accordion
+	 * and then puts this accordion on the grid.
+	 * @param grid the Grid we put our accordion with the skills on
+	 * @param skillFilter the skillFilter with the information which boxes are ticked
+	 */
 	private void searchSkills(GridPane grid, SkillFilter skillFilter){
 		if(skillListScrollPane != null){
 			grid.getChildren().remove(skillListScrollPane);

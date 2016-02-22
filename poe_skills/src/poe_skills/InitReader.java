@@ -66,6 +66,14 @@ public class InitReader {
 	}
 	
 	
+	/**
+	 * Adds a newline after a set amount of characters but does so only when there is a
+	 * space. So we start at the index from which we consider the string too long and then look
+	 * for the next space and insert a newline there. This is done until the rest of the string is no
+	 * longer than the set amount of characters in a line
+	 * @param skillDescription the string that should get newlines if it is too long
+	 * @return the string with newlines if it was too long
+	 */
 	private String insertNewlines(String skillDescription){
 		if(skillDescription.length() > NUMBER_OF_CHARS_BEFORE_NEWLINE){
 			int numberOfLines = skillDescription.length()/NUMBER_OF_CHARS_BEFORE_NEWLINE + 1;
