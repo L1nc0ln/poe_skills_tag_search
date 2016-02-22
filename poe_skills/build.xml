@@ -1,12 +1,12 @@
-<project name="poe_skills_tag_search" basedir="." default="compile">
+<project name="poe_skills" basedir="." default="compile">
   <property name="project" value="poe_skills"/>
   <property name="packages" value="poe_skills"/>
   <property name="main.class" value="poe_skills.SkillMain"/>
   <property name="src.dir" value="src"/>
-  <property name="build.dir" value="build"/>
-  <property name="classes.dir" value="${build.dir}/classes"/>
+  <property name="build.dir" value="bin"/>
+  <property name="classes.dir" value="${build.dir}"/>
   <property name="javadoc.dir" value="${build.dir}/doc"/>
-  <property name="jar.dir" value="${build.dir}/jar"/>
+  <property name="jar.dir" value="${build.dir}"/>
   <path id="poe_skills.classpath">
     <pathelement location="${build.dir}"/>
   </path>
@@ -15,7 +15,11 @@
   </target>
   <target name="compile">
     <mkdir dir="${classes.dir}"/>
-    <javac srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false" debug="true" fork="true">
+    <javac srcdir="${src.dir}"
+           destdir="${classes.dir}"
+           includeantruntime="false"
+           debug="true"
+           fork="true">
       <compilerarg line="-g"/>
       <src path="${src.dir}"/>
       <classpath refid="poe_skills.classpath"/>
@@ -23,14 +27,22 @@
   </target>
   <target name="javadoc">
     <mkdir dir="${javadoc.dir}"/>
-    <javadoc packagenames="${packages}" sourcepath="${src.dir}" destdir="${javadoc.dir}" version="true" author="true" use="true" windowtitle="${project} Documentation" doctitle="<h1>${project}</h1>"></javadoc>
+    <javadoc packagenames="${packages}"
+             sourcepath="${src.dir}"
+             destdir="${javadoc.dir}"
+             version="true"
+             author="true"
+             use="true"
+             windowtitle="${project} Documentation"
+             doctitle="${project}">
+     </javadoc>
   </target>
   <target name="jar">
     <mkdir dir="${jar.dir}"/>
     <jar destfile="${jar.dir}/${project}.jar" basedir="${classes.dir}">
       <manifest>
-	<attribute name="Main-Class" value="${main.class}"/>
-	<attribute name="Class-Path" value="."/>
+        <attribute name="Main-Class" value="${main.class}"/>
+        <attribute name="Class-Path" value="."/>
       </manifest>
       <fileset dir="${jar.dir}"/>
     </jar>
@@ -41,6 +53,6 @@
     </java>
   </target>
   <target name="clean-build" depends="clean,compile,javadoc,jar"/>
-  <target name="magic" depends="clean,compile,jar,run"/>
+  <target name="magic" depends="compile,jar,run"/>
   <target name="all" depends="clean,compile,javadoc,jar,run"/>
 </project>
