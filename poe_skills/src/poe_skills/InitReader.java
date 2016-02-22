@@ -19,6 +19,7 @@ public class InitReader {
 	private final int SECOND_ARGUMENT = 1;
 	private final int MAKE_LAST_ARRAY_INDEX = 1;
 	private final int SPLIT_TWO_PARTS = 2;
+	private final int NUMBER_OF_CHARS_BEFORE_NEWLINE = 140;
 	private File initFile;
 	private SkillFilter skillFilter;
 
@@ -47,6 +48,7 @@ public class InitReader {
 				String[] attributes = splitParts[SECOND_ARGUMENT].split("\\|", FIRST_ARGUMENT);
 				String[] lastAttributeSplit = attributes[attributes.length - MAKE_LAST_ARRAY_INDEX].split("\\?");
 				String skillDescription = lastAttributeSplit[SECOND_ARGUMENT];
+				skillDescription = insertNewlines(skillDescription);
 				attributes[attributes.length - MAKE_LAST_ARRAY_INDEX] = lastAttributeSplit[FIRST_ARGUMENT];
 				ArrayList<String> attributeList = makeArrayList(attributes);
 				createSkill = new Skill(skillName, attributes, skillFilter.getFilterValue(attributeList),
@@ -61,6 +63,25 @@ public class InitReader {
 			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	
+	private String insertNewlines(String skillDescription){
+		if(skillDescription.length() > NUMBER_OF_CHARS_BEFORE_NEWLINE){
+			int numberOfLines = skillDescription.length()/NUMBER_OF_CHARS_BEFORE_NEWLINE + 1;
+			int offset = 1;
+			for(int counter = 1; counter < numberOfLines; counter++){
+				char charAtCurrentIndex = skillDescription.charAt(NUMBER_OF_CHARS_BEFORE_NEWLINE*counter);
+				while(charAtCurrentIndex != ' ' && (NUMBER_OF_CHARS_BEFORE_NEWLINE*counter + offset) < skillDescription.length()){
+					charAtCurrentIndex = skillDescription.charAt(NUMBER_OF_CHARS_BEFORE_NEWLINE*counter + offset);
+					offset++;
+				}
+				skillDescription = skillDescription.substring(0, NUMBER_OF_CHARS_BEFORE_NEWLINE*counter + offset) + "\n" 
+						+ skillDescription.substring(NUMBER_OF_CHARS_BEFORE_NEWLINE*counter + offset);
+				offset = 1;
+			}
+			return skillDescription;
+		} else return skillDescription;
 	}
 	
 	/**
