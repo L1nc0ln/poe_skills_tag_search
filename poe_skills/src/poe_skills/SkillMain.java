@@ -12,7 +12,6 @@ import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Accordion;
-import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
@@ -46,9 +45,7 @@ public class SkillMain extends Application{
 	private final int H_GAP = 10;
 	private final int V_GAP = 10;
 	private final int PADDING_ALL = 25;
-	private final int BUTTON_ROW = 7;
-	private final int BUTTON_COL = 2;
-	private final int ACCORDION_ROW = 9;
+	private final int ACCORDION_ROW = 7;
 	private final int ACCORDION_START_COL = 0;
 	private final int ACCORDION_COL_SPAN = 9;
 	private final int ACCORDION_ROW_SPAN = 1;
@@ -56,7 +53,6 @@ public class SkillMain extends Application{
 	private final int SEPARATOR_ROW_SPAN = 1;
 	private final int SEPARATOR_COL_START = 0;
 	private final int SEPARATOR_TAG_BUTTON_ROW = 6;
-	private final int SEPARATOR_BUTTON_LIST_ROW = 8;
 	private final int SEPARATOR_VERTICAL_COL_SPAN = 1;
 	private final int SEPARATOR_VERTICAL_ROW_SPAN = 6;
 	private final int SEPARATOR_VERTICAL_COL = 1;
@@ -87,7 +83,7 @@ public class SkillMain extends Application{
         
 		//Setup of the grid
 		GridPane grid = new GridPane();
-		grid.setAlignment(Pos.CENTER_LEFT);
+		grid.setAlignment(Pos.TOP_LEFT);
 		grid.setHgap(H_GAP);
 		grid.setVgap(V_GAP);
 		grid.setPadding(new Insets(PADDING_ALL));
@@ -119,7 +115,7 @@ public class SkillMain extends Application{
 		for(int rowCounter = 0; rowCounter < NUMBER_OF_CHECKBOX_ROWS; rowCounter ++){
 			for(int counter = END_INDEX_OF_CHECKBOX_ROWS[rowCounter]; counter < END_INDEX_OF_CHECKBOX_ROWS[rowCounter + 1]; counter++){
 				grid.add(tagCheckBoxes[counter], colCounter, rowCounter);
-				addCheckBoxHandler(tags[counter], tagCheckBoxes[counter], skillFilter);
+				addCheckBoxHandler(tags[counter], tagCheckBoxes[counter], skillFilter, grid);
 				colCounter++;
 			}
 			colCounter = CHECKBOXES_START_COL;
@@ -129,22 +125,9 @@ public class SkillMain extends Application{
 		Separator separatorTagsButton = new Separator(Orientation.HORIZONTAL);
 		GridPane.setConstraints(separatorTagsButton, SEPARATOR_COL_START, SEPARATOR_TAG_BUTTON_ROW, SEPARATOR_COL_SPAN, SEPARATOR_ROW_SPAN);
 		grid.add(separatorTagsButton, SEPARATOR_COL_START, SEPARATOR_TAG_BUTTON_ROW);
-		Separator separatorButtonList = new Separator(Orientation.HORIZONTAL);
-		GridPane.setConstraints(separatorButtonList, SEPARATOR_COL_START, SEPARATOR_BUTTON_LIST_ROW, SEPARATOR_COL_SPAN, SEPARATOR_ROW_SPAN);
-		grid.add(separatorButtonList, SEPARATOR_COL_START, SEPARATOR_BUTTON_LIST_ROW);
 		Separator separatorVertical = new Separator(Orientation.VERTICAL);
 		GridPane.setConstraints(separatorVertical, SEPARATOR_VERTICAL_COL, SEPARATOR_VERTICAL_START_ROW, SEPARATOR_VERTICAL_COL_SPAN, SEPARATOR_VERTICAL_ROW_SPAN);
 		grid.add(separatorVertical, SEPARATOR_VERTICAL_COL, SEPARATOR_VERTICAL_START_ROW);
-
-		//the button that triggers the display of the skills matching the criteria
-		Button submitButton = new Button("show Skills");
-		submitButton.setOnAction(new EventHandler<ActionEvent>() {
-		    @Override public void handle(ActionEvent e) {
-		        //skillFilter.showSkills();
-		    	searchSkills(grid, skillFilter);
-		    }
-		});
-		grid.add(submitButton, BUTTON_COL, BUTTON_ROW);
 		
 		//set scene and show the stage
 		scene = new Scene(grid, WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -163,7 +146,7 @@ public class SkillMain extends Application{
 	 * @param checkBox the checkbox that gets ticked/unticked
 	 * @param skillFilter the instance of the skillFilter class responsible for storing the list of ticked tags
 	 */
-	private void addCheckBoxHandler(String tagName, CheckBox checkBox, SkillFilter skillFilter){
+	private void addCheckBoxHandler(String tagName, CheckBox checkBox, SkillFilter skillFilter, GridPane grid){
 		final String tagNameFinal = tagName;
 		final CheckBox checkBoxFinal = checkBox;
 		checkBoxFinal.selectedProperty().addListener(new ChangeListener<Boolean>() {
@@ -171,9 +154,11 @@ public class SkillMain extends Application{
 	            Boolean old_val, Boolean new_val) {
 	        		if(new_val){
 	        			skillFilter.addCriterium(tagNameFinal);
+	        			searchSkills(grid, skillFilter);
 	        		}
 	        		else{
 	        			skillFilter.removeCriterium(tagNameFinal);
+	        			searchSkills(grid, skillFilter);
 	        		}
 	        }
 	    });
