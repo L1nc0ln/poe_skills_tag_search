@@ -8,3 +8,8 @@ that can create or use a frenzy charge and fit all other parameters.
 
 If you find any bugs or have any suggestions which tags or functionalities might improve the tool (or a good name for it :D) fell free to contact me.
 Also if you have any tips on how to make the GUI better I would be very grateful.
+
+
+Preview:
+
+![alt tag](https://cloud.githubusercontent.com/assets/8633145/13217360/2c8e8e20-d962-11e5-90c6-3c83186b7ae5.PNG)

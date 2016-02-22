@@ -62,7 +62,7 @@ public class SkillMain extends Application{
 	private final int SEPARATOR_VERTICAL_COL = 1;
 	private final int SEPARATOR_VERTICAL_START_ROW = 0;
 	private final int WINDOW_HEIGHT = 600;
-	private final int WINDOW_WIDTH = 900;
+	private final int WINDOW_WIDTH = 1000;
 	private final int[] END_INDEX_OF_CHECKBOX_ROWS = {0, 3, 7, 14, 18, 23, 28};
 	private final int NUMBER_OF_CHECKBOX_ROWS = 6;
 	private final int CHECKBOXES_START_COL = 2;
