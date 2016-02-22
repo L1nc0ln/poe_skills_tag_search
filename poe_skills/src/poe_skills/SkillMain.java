@@ -193,7 +193,15 @@ public class SkillMain extends Application{
 			}
 			skillTags += "\n";
 			paneGrid.add(new Text(skillTags + currentSkill.getSkillDescription()), 0, 0);
-			paneGrid.add(new Hyperlink(POE_WIKI_ADRESS + currentSkill.getSkillName().replace(" ", "_")), 0, 1);
+			Hyperlink linkToWiki = new Hyperlink(POE_WIKI_ADRESS + currentSkill.getSkillName().replace(" ", "_"));
+			linkToWiki.setOnAction(new EventHandler<ActionEvent>() {
+
+                @Override
+                public void handle(ActionEvent t) {
+                    getHostServices().showDocument(linkToWiki.getText());
+                }
+            });
+			paneGrid.add(linkToWiki, 0, 1);
 			skillPane.setContent(paneGrid);
 			skillPane.setExpanded(false);
 			skillPanes[counter] = skillPane;
