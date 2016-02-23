@@ -13,3 +13,8 @@ Also if you have any tips on how to make the GUI better I would be very grateful
 Preview:
 
 ![alt tag](https://cloud.githubusercontent.com/assets/8633145/13217360/2c8e8e20-d962-11e5-90c6-3c83186b7ae5.PNG)
+
+
+Updates since this picture:
+- The show Skills button was removed, the list now updates as soon as you tick or untick a checkbox
+- Checkboxes that would yield no skills as a result are now disabled
