@@ -65,6 +65,8 @@ public class SkillMain extends Application{
 	private TitledPane[] skillPanes;
 	private ScrollPane skillListScrollPane;
 	private Accordion skillAccordion;
+	private CheckBox[] tagCheckBoxes;
+	//private CheckBox[] disabledCheckBoxes;
 	
 	public static void main(String[] args) {
 		
@@ -102,7 +104,7 @@ public class SkillMain extends Application{
 			grid.add(new Label(GROUP_DESCRIPTIONS[counter]), 0, counter);
 		}
 		
-		final CheckBox[] tagCheckBoxes = new CheckBox[tags.length];
+		tagCheckBoxes = new CheckBox[tags.length];
 		
 		//create and initialiase the Checkboxes
 		for(int counter = 0; counter < tags.length; counter++){
@@ -185,6 +187,7 @@ public class SkillMain extends Application{
 			System.err.println("Could not find the prime belonging to criterium " + e.getMissingCriterium());
 			System.exit(0);
 		}
+		disableUnavailableCheckBoxes(matchedSkills, skillFilter);
 		skillPanes = new TitledPane[matchedSkills.size()];
 		TitledPane skillPane;
 		Skill currentSkill;
@@ -215,6 +218,30 @@ public class SkillMain extends Application{
 		skillAccordion.getPanes().addAll(skillPanes);
 		skillListScrollPane = new ScrollPane(skillAccordion);
 		grid.add(skillListScrollPane, ACCORDION_START_COL, ACCORDION_ROW, ACCORDION_COL_SPAN, ACCORDION_ROW_SPAN);
+	}
+	
+	
+	public void disableUnavailableCheckBoxes(ArrayList<Skill> matchedSkills, SkillFilter skillFilter){
+		for(int tagIndex = 0; tagIndex < tags.length; tagIndex++){
+			int prime = 0;
+			boolean fitsASkill = false;
+			try {
+				 prime = skillFilter.getPrime(tags[tagIndex]);
+			} catch (NoSuchFilterCriteriumException e) {
+				System.err.println("Could not find the prime belonging to criterium " + e.getMissingCriterium());
+				System.exit(0);
+			}
+			for(Skill skill: matchedSkills){
+				if(skill.getPrimeTotal()%prime == 0){
+					fitsASkill = true;
+				}
+			}
+			if(!fitsASkill && !tagCheckBoxes[tagIndex].isDisabled()){
+				tagCheckBoxes[tagIndex].setDisable(true);
+			} else if(fitsASkill && tagCheckBoxes[tagIndex].isDisabled()){
+				tagCheckBoxes[tagIndex].setDisable(false);
+			}
+		}
 	}
 
 }

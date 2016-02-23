@@ -78,6 +78,20 @@ public class SkillFilter {
 	}
 	
 	/**
+	 * 
+	 * @param criterium the criterium that we want the corresponding prime from
+	 * @return the corresponding prime to the criterium
+	 * @throws NoSuchFilterCriteriumException
+	 */
+	public int getPrime(String criterium) throws NoSuchFilterCriteriumException{
+		try{
+			return attribute_to_prime.get(criterium);
+		} catch(NullPointerException e){
+			throw new NoSuchFilterCriteriumException(criterium);
+		}
+	}
+	
+	/**
 	 * prints all Skills that are in the parameter skillList
 	 * Form is skillname: attribute1 attribute2 ...
 	 * @param skillList
