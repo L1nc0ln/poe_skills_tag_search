@@ -12,7 +12,7 @@ Also if you have any tips on how to make the GUI better I would be very grateful
 
 Preview:
 
-![alt tag](https://cloud.githubusercontent.com/assets/8633145/13217360/2c8e8e20-d962-11e5-90c6-3c83186b7ae5.PNG)
+![alt tag](https://cloud.githubusercontent.com/assets/8633145/13369648/715cad78-dcf7-11e5-84d6-dc8328edfeaa.PNG)
 
 
 Updates since this picture:
