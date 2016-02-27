@@ -75,7 +75,6 @@ public class SkillMain extends Application{
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		ErrorFileWriter.logError("Test");
 		SkillFilter skillFilter = new SkillFilter();
 		
 		Scene scene;
