@@ -43,9 +43,11 @@ public class SkillMain extends Application{
 	private final int PADDING_ALL = 25;
 	private final int ACCORDION_ROW = 7;
 	private final int ACCORDION_START_COL = 0;
-	private final int ACCORDION_COL_SPAN = 9;
+	private final int ACCORDION_COL_SPAN = 10;
 	private final int ACCORDION_ROW_SPAN = 1;
-	private final int SEPARATOR_COL_SPAN = 9;
+	private final int SKILLLIST_SCROLLPANE_PREF_HEIGHT = 500;
+	private final int SKILLLIST_SCROLLPANE_PREF_WIDTH = 1200;
+	private final int SEPARATOR_COL_SPAN = 10;
 	private final int SEPARATOR_ROW_SPAN = 1;
 	private final int SEPARATOR_COL_START = 0;
 	private final int SEPARATOR_TAG_BUTTON_ROW = 6;
@@ -54,7 +56,7 @@ public class SkillMain extends Application{
 	private final int SEPARATOR_VERTICAL_COL = 1;
 	private final int SEPARATOR_VERTICAL_START_ROW = 0;
 	private final int WINDOW_HEIGHT = 600;
-	private final int WINDOW_WIDTH = 1000;
+	private final int WINDOW_WIDTH = 1200;
 	private final int[] END_INDEX_OF_CHECKBOX_ROWS = {0, 3, 7, 14, 18, 23, 28};
 	private final int NUMBER_OF_CHECKBOX_ROWS = 6;
 	private final int CHECKBOXES_START_COL = 2;
@@ -73,7 +75,7 @@ public class SkillMain extends Application{
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		
+		ErrorFileWriter.logError("Test");
 		SkillFilter skillFilter = new SkillFilter();
 		
 		Scene scene;
@@ -186,7 +188,7 @@ public class SkillMain extends Application{
 		try {
 			matchedSkills = skillFilter.filter();
 		} catch (NoSuchFilterCriteriumException e) {
-			System.err.println("Could not find the prime belonging to criterium " + e.getMissingCriterium());
+			ErrorFileWriter.logError("Could not find the prime belonging to criterium " + e.getMissingCriterium());
 			System.exit(0);
 		}
 		disableUnavailableCheckBoxes(matchedSkills, skillFilter);
@@ -198,6 +200,8 @@ public class SkillMain extends Application{
 		}
 		skillAccordion.getPanes().addAll(skillPanes);
 		skillListScrollPane = new ScrollPane(skillAccordion);
+		skillListScrollPane.setPrefHeight(SKILLLIST_SCROLLPANE_PREF_HEIGHT);
+		skillListScrollPane.setPrefWidth(SKILLLIST_SCROLLPANE_PREF_WIDTH);
 		grid.add(skillListScrollPane, ACCORDION_START_COL, ACCORDION_ROW, ACCORDION_COL_SPAN, ACCORDION_ROW_SPAN);
 	}
 	
@@ -209,7 +213,7 @@ public class SkillMain extends Application{
 			try {
 				 prime = skillFilter.getPrime(tags[tagIndex]);
 			} catch (NoSuchFilterCriteriumException e) {
-				System.err.println("Could not find the prime belonging to criterium " + e.getMissingCriterium());
+				ErrorFileWriter.logError("Could not find the prime belonging to criterium " + e.getMissingCriterium());
 				System.exit(0);
 			}
 			for(Skill skill: matchedSkills){

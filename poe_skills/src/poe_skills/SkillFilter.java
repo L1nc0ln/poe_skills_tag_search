@@ -167,7 +167,8 @@ public class SkillFilter {
 				System.out.println(activeFilterCriteria);
 			}
 		} catch (NoSuchFilterCriteriumException e) {
-			System.out.println("Could not find a criterium named " + e.getMissingCriterium());
+			ErrorFileWriter.logError("Could not find a criterium named " + e.getMissingCriterium());
+			System.exit(0);
 		}
 	}
 	

@@ -35,6 +35,11 @@ public class InitReader {
 	private final int MAKE_LAST_ARRAY_INDEX = 1;
 	private final int SPLIT_TWO_PARTS = 2;
 	private final int NUMBER_OF_CHARS_BEFORE_NEWLINE = 140;
+	private final int TABLE_COL = 0;
+	private final int TABLE_ROW = 1;
+	private final int TABLE_COL_SPAN = 8;
+	private final int TABLE_ROW_SPAN = 1;
+	private final int TABLE_PREF_WIDTH = 100;
 	private SkillFilter skillFilter;
 	
 
@@ -119,11 +124,11 @@ public class InitReader {
 					   return new SimpleStringProperty((p.getValue()[colNo]));
 					}
 					});
-					tc.setPrefWidth(90);
+					tc.setPrefWidth(TABLE_PREF_WIDTH);
 					table.getColumns().add(tc);
 				}
 				table.setItems(data);
-				paneGrid.add(table, 0, 1, 8, 1);
+				paneGrid.add(table, TABLE_COL, TABLE_ROW, TABLE_COL_SPAN, TABLE_ROW_SPAN);
 				skillPane.setContent(paneGrid);
 				skillPane.setExpanded(false);
 				
@@ -134,9 +139,8 @@ public class InitReader {
 				arrayPosition++;
 			}
 		} catch (IOException | NoSuchFilterCriteriumException e) {
-			System.out.println("ERROR while reading line: " + arrayPosition);
-			e.printStackTrace();
-			return null;
+			ErrorFileWriter.logError("ERROR while reading line: " + arrayPosition);
+			System.exit(0);
 		}
 		return allSkills;
 	}

@@ -9,6 +9,7 @@ import javafx.scene.control.TitledPane;
  */
 public class Skill {
 
+	private final int MAX_NUM_ATTRIBUTES = 10;
 	private String skillName;
 	private String[] attributes;
 	private int primeTotal;
@@ -25,7 +26,7 @@ public class Skill {
 	public Skill(final String skillName, final String[] attributes, final int primeTotal,
 			final String skillDescription, TitledPane skillPane){
 		this.skillName = skillName;
-		this.attributes = new String[10];
+		this.attributes = new String[MAX_NUM_ATTRIBUTES];
 		this.attributes = attributes;
 		this.primeTotal = primeTotal;
 		this.skillDescription = skillDescription;
