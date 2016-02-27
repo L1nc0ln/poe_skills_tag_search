@@ -14,10 +14,10 @@ public class SkillFilter {
 
 	private final int[] primeNumbers = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113};
 	private HashMap<String, Integer> attribute_to_prime;
-	private InitReader initReader;
 	private ArrayList<String> activeFilterCriteria = new ArrayList<>();
 	private ArrayList<Skill> allSkills;
-	
+
+
 	/**
 	 * Filters the list of all skills with the criteria. A little explanation about how this works:
 	 * each criterium has an assigned prime number, and the Multiplicative of all the criteria is stored in the
@@ -206,8 +206,8 @@ public class SkillFilter {
 		for(int counter = 0; counter < SkillMain.tags.length; counter++){
 			attribute_to_prime.put(SkillMain.tags[counter], primeNumbers[counter]);
 		}
-		initReader = new InitReader(this);
 		allSkills = new ArrayList<>(SkillMain.MAX_NUMBER_OF_SKILLS);
+		InitReader initReader = new InitReader(this);
 		allSkills = initReader.read();
 	}
 	

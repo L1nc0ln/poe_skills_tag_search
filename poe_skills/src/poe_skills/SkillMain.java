@@ -5,22 +5,18 @@ import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 /**
@@ -156,11 +152,17 @@ public class SkillMain extends Application{
 	            Boolean old_val, Boolean new_val) {
 	        		if(new_val){
 	        			skillFilter.addCriterium(tagNameFinal);
+	        			//long before = System.nanoTime();
 	        			searchSkills(grid, skillFilter);
+	        			//long after = System.nanoTime();
+	        			//System.out.println((after - before)/1000000);
 	        		}
 	        		else{
 	        			skillFilter.removeCriterium(tagNameFinal);
+	        			//long before = System.nanoTime();
 	        			searchSkills(grid, skillFilter);
+	        			//long after = System.nanoTime();
+	        			//System.out.println((after - before)/1000000);
 	        		}
 	        }
 	    });
@@ -189,31 +191,10 @@ public class SkillMain extends Application{
 		}
 		disableUnavailableCheckBoxes(matchedSkills, skillFilter);
 		skillPanes = new TitledPane[matchedSkills.size()];
-		TitledPane skillPane;
 		Skill currentSkill;
 		for(int counter = 0; counter < matchedSkills.size(); counter++){
-			skillPane = new TitledPane();
 			currentSkill = matchedSkills.get(counter);
-			skillPane.setText(currentSkill.getSkillName());
-			GridPane paneGrid = new GridPane();
-			String skillTags = "Tags: ";
-			for(String tag: currentSkill.getAttributes()){
-				skillTags = skillTags + tag + "  ";
-			}
-			skillTags += "\n";
-			paneGrid.add(new Text(skillTags + currentSkill.getSkillDescription()), 0, 0);
-			Hyperlink linkToWiki = new Hyperlink(POE_WIKI_ADRESS + currentSkill.getSkillName().replace(" ", "_"));
-			linkToWiki.setOnAction(new EventHandler<ActionEvent>() {
-
-                @Override
-                public void handle(ActionEvent t) {
-                    getHostServices().showDocument(linkToWiki.getText());
-                }
-            });
-			paneGrid.add(linkToWiki, 0, 1);
-			skillPane.setContent(paneGrid);
-			skillPane.setExpanded(false);
-			skillPanes[counter] = skillPane;
+			skillPanes[counter] = currentSkill.getSkillPane();
 		}
 		skillAccordion.getPanes().addAll(skillPanes);
 		skillListScrollPane = new ScrollPane(skillAccordion);

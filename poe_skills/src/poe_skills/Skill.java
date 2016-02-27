@@ -1,5 +1,7 @@
 package poe_skills;
 
+import javafx.scene.control.TitledPane;
+
 /**
  * Class for storing the information about a certain Path of Exile skill
  * @author linc
@@ -11,6 +13,7 @@ public class Skill {
 	private String[] attributes;
 	private int primeTotal;
 	private String skillDescription;
+	private TitledPane skillPane;
 	
 	/**
 	 *  Initialises the variables of this class
@@ -20,12 +23,13 @@ public class Skill {
 	 * @param skillDescription the description of the skill, taken from http://pathofexile.gamepedia.com/
 	 */
 	public Skill(final String skillName, final String[] attributes, final int primeTotal,
-			final String skillDescription){
+			final String skillDescription, TitledPane skillPane){
 		this.skillName = skillName;
 		this.attributes = new String[10];
 		this.attributes = attributes;
 		this.primeTotal = primeTotal;
 		this.skillDescription = skillDescription;
+		this.skillPane = skillPane;
 	}
 	
 	/**
@@ -77,6 +81,9 @@ public class Skill {
 			return false;
 		} else return true;
 	}
-	
+
+	public TitledPane getSkillPane() {
+		return skillPane;
+	}
 	
 }

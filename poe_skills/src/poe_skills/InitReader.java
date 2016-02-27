@@ -5,6 +5,19 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TitledPane;
+import javafx.scene.control.TableColumn.CellDataFeatures;
+import javafx.scene.layout.GridPane;
+import javafx.scene.text.Text;
+import javafx.util.Callback;
 
 /**
  * class for transforming the skills in the ini file into a list of Skills
@@ -14,36 +27,36 @@ import java.util.ArrayList;
  */
 public class InitReader {
 	
+	private final int normalMaxSkillLevel = 30;
+	private final int specialMaxSkillLevel = 10;
 	private final int FIRST_ARGUMENT = 0;
 	private final int FIRST_ARRAY_INDEX = 0;
 	private final int SECOND_ARGUMENT = 1;
 	private final int MAKE_LAST_ARRAY_INDEX = 1;
 	private final int SPLIT_TWO_PARTS = 2;
 	private final int NUMBER_OF_CHARS_BEFORE_NEWLINE = 140;
-	private File initFile;
 	private SkillFilter skillFilter;
+	
 
 	/**
-	 * assings the path to the skills.ini file to the variable, assigns the skillFilter
-	 * @param skillFilter the skillFilter to use, needed for knowing which criterium belongs to which prime
-	 */
-	public InitReader(SkillFilter skillFilter){
-		initFile = new File(getClass().getClassLoader().getResource("").getPath() + "poe_skills/skills.ini");
-		this.skillFilter = skillFilter;
-	}
-	
-	/**
-	 * reads the skills.ini file and transforms it into a list of Skills
-	 * @return the list of skills obtained from the skills.ini file
+	 * reads the skill_tables.ini file and transforms it into a list of Skills
+	 * @return the list of skills obtained from the skill_tables.ini file
 	 */
 	public ArrayList<Skill> read(){
+		File initFile = new File(getClass().getClassLoader().getResource("").getPath() + "poe_skills/skill_tables.ini");
 		ArrayList<Skill> allSkills = new ArrayList<>(SkillMain.MAX_NUMBER_OF_SKILLS);
 		int arrayPosition = FIRST_ARRAY_INDEX;
+		String currentLine;
+		String skillNameLine;
 		Skill createSkill;
 		try(BufferedReader reader = new BufferedReader(new FileReader(initFile))){
-			String activeLine = reader.readLine();
-			while(activeLine != null){
-				String[] splitParts = activeLine.split("\\|", SPLIT_TWO_PARTS);
+			currentLine = reader.readLine();
+			while(currentLine != null){
+				skillNameLine = currentLine;
+				
+				//Seperate all the information contained in the first line and process it
+				//Information in the first line: Skillname, Attributes/Tags, Skill Description
+				String[] splitParts = skillNameLine.split("\\|", SPLIT_TWO_PARTS);
 				String skillName = splitParts[FIRST_ARGUMENT];
 				String[] attributes = splitParts[SECOND_ARGUMENT].split("\\|", FIRST_ARGUMENT);
 				String[] lastAttributeSplit = attributes[attributes.length - MAKE_LAST_ARRAY_INDEX].split("\\?");
@@ -51,20 +64,82 @@ public class InitReader {
 				skillDescription = insertNewlines(skillDescription);
 				attributes[attributes.length - MAKE_LAST_ARRAY_INDEX] = lastAttributeSplit[FIRST_ARGUMENT];
 				ArrayList<String> attributeList = makeArrayList(attributes);
+				
+				currentLine = reader.readLine();
+				
+				//Second line: Headers for the table, what each column is about. Columns are seperated by a tab(\t)
+				String[] headers = currentLine.split("\t");
+				currentLine = reader.readLine();
+				String[][] skillTable;
+				//seperate case for enlighten, empower and enhance since those skills do not have as many levels as normal skills
+				if(skillName.equals("Enlighten") || skillName.equals("Empower") || skillName.equals("Enhance")){
+					skillTable = new String[specialMaxSkillLevel][headers.length];
+					for(int rowCounter = 0; rowCounter < specialMaxSkillLevel; rowCounter++){
+						String[] partsCurrentLine = currentLine.split("\t");
+						for(int colCounter = 0; colCounter < headers.length; colCounter++){
+							skillTable[rowCounter][colCounter] = partsCurrentLine[colCounter];
+						}
+						currentLine = reader.readLine();
+					}
+				} else{
+					skillTable = new String[normalMaxSkillLevel][headers.length];
+					for(int rowCounter = 0; rowCounter < normalMaxSkillLevel; rowCounter++){
+						String[] partsCurrentLine = currentLine.split("\t");
+						for(int colCounter = 0; colCounter < headers.length; colCounter++){
+							skillTable[rowCounter][colCounter] = partsCurrentLine[colCounter];
+						}
+						currentLine = reader.readLine();
+					}
+				}
+				
+				//create the pane with all information and the table, we store that with each skill so we dont have to create
+				//a new pane for each skill each time a box is checked. Should lower the response time but increases RAM usage
+				TitledPane skillPane = new TitledPane();
+				skillPane.setText(skillName);
+				GridPane paneGrid = new GridPane();
+				String skillTags = "Tags: ";
+				for(String tag: attributeList){
+					skillTags = skillTags + tag + "  ";
+				}
+				skillTags += "\n";
+				paneGrid.add(new Text(skillTags + skillDescription), 0, 0);
+				
+				//since the amount of columns and the column names are different for each skill we cannot use the normal way
+				//of creating a table with a Class. This is the only way I found of doing it when both amount and name of columns are unknown.
+				//if you read this and know a better way please contact me :D
+				ObservableList<String[]> data = FXCollections.observableArrayList();
+				data.addAll(Arrays.asList(skillTable));
+				TableView<String[]> table = new TableView<>();
+				for (int i = 0; i < skillTable[0].length; i++) {
+					TableColumn tc = new TableColumn(headers[i]);
+					final int colNo = i;
+					tc.setCellValueFactory(new Callback<CellDataFeatures<String[], String>, ObservableValue<String>>() {
+					@Override
+					public ObservableValue<String> call(CellDataFeatures<String[], String> p) {
+					   return new SimpleStringProperty((p.getValue()[colNo]));
+					}
+					});
+					tc.setPrefWidth(90);
+					table.getColumns().add(tc);
+				}
+				table.setItems(data);
+				paneGrid.add(table, 0, 1, 8, 1);
+				skillPane.setContent(paneGrid);
+				skillPane.setExpanded(false);
+				
+				//finally create the skill and add it to the list
 				createSkill = new Skill(skillName, attributes, skillFilter.getFilterValue(attributeList),
-						skillDescription);
+						skillDescription, skillPane);
 				allSkills.add(createSkill);
 				arrayPosition++;
-				activeLine = reader.readLine();
 			}
-			return allSkills;
 		} catch (IOException | NoSuchFilterCriteriumException e) {
 			System.out.println("ERROR while reading line: " + arrayPosition);
 			e.printStackTrace();
 			return null;
 		}
+		return allSkills;
 	}
-	
 	
 	/**
 	 * Adds a newline after a set amount of characters but does so only when there is a
@@ -103,6 +178,14 @@ public class InitReader {
 			attributeList.add(attribute);
 		}
 		return attributeList;
+	}
+	
+	/**
+	 * assigns the skillFilter
+	 * @param skillFilter the skillFilter to use, needed for knowing which criterium belongs to which prime
+	 */
+	public InitReader(SkillFilter skillFilter){
+		this.skillFilter = skillFilter;
 	}
 	
 }
