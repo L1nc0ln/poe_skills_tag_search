@@ -4,7 +4,7 @@ since this is my first time I created a GUI.
 
 At the moment there are only the basic tags from the game available for search but I will probably add costum tags
 to search in the future. Those would be frenzy charges for example, if this box is ticked it will display all skills
-that can create or use a frenzy charge and fit all other parameters.
+that can create or use a frenzy charge and fit all other parameters. Another thing I am thinking about with those tags is weapons.
 
 If you find any bugs or have any suggestions which tags or functionalities might improve the tool (or a good name for it :D) fell free to contact me.
 Also if you have any tips on how to make the GUI better I would be very grateful.
@@ -15,6 +15,7 @@ Preview:
 ![alt tag](https://cloud.githubusercontent.com/assets/8633145/13369648/715cad78-dcf7-11e5-84d6-dc8328edfeaa.PNG)
 
 
-Updates since this picture:
-- The show Skills button was removed, the list now updates as soon as you tick or untick a checkbox
-- Checkboxes that would yield no skills as a result are now disabled
+ToDo's:
+- Costum Tags
+- Logging to an error file instead System.err.
+- The size of the Accordion can be too small at times, especially with curses that have like a million columns in the table
