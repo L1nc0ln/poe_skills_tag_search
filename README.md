@@ -1,21 +1,21 @@
-# poe_skills_tag_search
-A small tool to search Path of Exile skills based on the tags they bear. Now includes a GUI via JavaFX, but it is by no means fancy
+# PoE GET - Gem Exploration Tool
+
+A small tool to search Path of Exile skills based on the tags they bear, including custom tags. Now includes a GUI via JavaFX, but it is by no means fancy
 since this is my first time I created a GUI.
 
-At the moment there are only the basic tags from the game available for search but I will probably add costum tags
-to search in the future. Those would be frenzy charges for example, if this box is ticked it will display all skills
-that can create or use a frenzy charge and fit all other parameters. Another thing I am thinking about with those tags is weapons.
-
-If you find any bugs or have any suggestions which tags or functionalities might improve the tool (or a good name for it :D) fell free to contact me.
-Also if you have any tips on how to make the GUI better I would be very grateful.
+The Weapon tags mean the following:
+	ANY - will display all attacks that you can use with any weapon
+	Two Handed - will display all attacks that you can use with any two handed weapon
+	Dual Wield - will display all attacks that you can use while dual wielding
+	
+If you have an idea on which custom tags might be useful, find any skills with the wrong tags or have
+any suggestions on an additional feature please contact me, if it is a good idea I will try and implement it.
+Any Feedback you have is also welcome.
+	
+All the information about the skills is taken from http://pathofexile.gamepedia.com/Path_of_Exile_Wiki .
 
 
 Preview:
 
-![alt tag](https://cloud.githubusercontent.com/assets/8633145/13369648/715cad78-dcf7-11e5-84d6-dc8328edfeaa.PNG)
+![alt tag](https://cloud.githubusercontent.com/assets/8633145/13379944/3c59e3d6-de35-11e5-9a36-9c2f0de8796b.PNG)
 
-
-ToDo's:
-- Costum Tags
-- Logging to an error file instead System.err.
-- The size of the Accordion can be too small at times, especially with curses that have like a million columns in the table
