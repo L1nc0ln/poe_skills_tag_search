@@ -15,7 +15,14 @@ Any Feedback you have is also welcome.
 All the information about the skills is taken from http://pathofexile.gamepedia.com/Path_of_Exile_Wiki .
 
 
-Preview:
+**ZIP of the program**
+
+The program as .zip with scripts to launch it under Windows and Linux is available here: https://github.com/L1nc0ln/poe_skills_tag_search/releases
+
+
+**Preview:**
 
 ![alt tag](https://cloud.githubusercontent.com/assets/8633145/13379944/3c59e3d6-de35-11e5-9a36-9c2f0de8796b.PNG)
+
+Shoutout to https://github.com/D4ryus, without your suggestions and help this project wouldn't be here :D
 
