@@ -33,33 +33,38 @@ public class SkillMain extends Application{
 		"Attack", "Cast", "Aura", "Curse", "Spell", "Warcry",
 		"Bow", "Movement", "Projectile","Melee", "AoE", 
 		"Mine", "Golem", "Minion", "Totem", "Trap",
-		"Duration", "Trigger", "Support", "Vaal", "Chaining"};
-	private final String[] GROUP_DESCRIPTIONS = {"Attribute", "Element", "Modifier1", "Modifier2", "Minion", "Modifier3"};
+		"Duration", "Trigger", "Support", "Vaal", "Chaining",
+		"Frenzy", "Power", "Endurance",
+		"Sword", "Axe", "Claw", "Dagger", "Staff", "Mace", "Unarmed", "Two Handed", "Dual Wield", "Wand", "Any"};
+	private final String[] GROUP_DESCRIPTIONS = {"Attribute", "Element", "Modifier1", "Modifier2", "Minion", "Modifier3", "Charges", "Weapons"};
+	private final int[] END_INDEX_OF_CHECKBOX_ROWS = {0, 3, 7, 14, 18, 23, 28, 31, 38, 42};
+	private final int NUMBER_OF_CHECKBOX_ROWS = END_INDEX_OF_CHECKBOX_ROWS.length - 1;
+	private final int CHECKBOXES_START_COL = 2;
+	private final int NUMBER_NORMAL_DESCRIPTIONS = 6;
+	private final int OFFSET_CUSTOM_TAGS = 1;
 	private final int NUMBER_OF_COLUMNS = 9;
 	private final int COLUMN_WIDTH = 100;
 	private final int COLUMN_SEPARATOR_WIDTH = 20;
 	private final int H_GAP = 10;
 	private final int V_GAP = 10;
 	private final int PADDING_ALL = 25;
-	private final int ACCORDION_ROW = 7;
+	private final int ACCORDION_ROW = END_INDEX_OF_CHECKBOX_ROWS.length + 2;
 	private final int ACCORDION_START_COL = 0;
 	private final int ACCORDION_COL_SPAN = 10;
 	private final int ACCORDION_ROW_SPAN = 1;
-	private final int SKILLLIST_SCROLLPANE_PREF_HEIGHT = 500;
+	private final int SKILLLIST_SCROLLPANE_PREF_HEIGHT = 600;
 	private final int SKILLLIST_SCROLLPANE_PREF_WIDTH = 1200;
 	private final int SEPARATOR_COL_SPAN = 10;
 	private final int SEPARATOR_ROW_SPAN = 1;
 	private final int SEPARATOR_COL_START = 0;
 	private final int SEPARATOR_TAG_BUTTON_ROW = 6;
+	private final int SEPARATOR_CUSTOM_TAG_BUTTON_ROW = END_INDEX_OF_CHECKBOX_ROWS.length + 1;
 	private final int SEPARATOR_VERTICAL_COL_SPAN = 1;
 	private final int SEPARATOR_VERTICAL_ROW_SPAN = 6;
 	private final int SEPARATOR_VERTICAL_COL = 1;
 	private final int SEPARATOR_VERTICAL_START_ROW = 0;
 	private final int WINDOW_HEIGHT = 600;
 	private final int WINDOW_WIDTH = 1200;
-	private final int[] END_INDEX_OF_CHECKBOX_ROWS = {0, 3, 7, 14, 18, 23, 28};
-	private final int NUMBER_OF_CHECKBOX_ROWS = 6;
-	private final int CHECKBOXES_START_COL = 2;
 	private TitledPane[] skillPanes;
 	private ScrollPane skillListScrollPane;
 	private Accordion skillAccordion;
@@ -98,7 +103,11 @@ public class SkillMain extends Application{
 		
 		//the descriptions at the side
 		for(int counter = 0; counter < GROUP_DESCRIPTIONS.length; counter++){
-			grid.add(new Label(GROUP_DESCRIPTIONS[counter]), 0, counter);
+			if(counter < NUMBER_NORMAL_DESCRIPTIONS){
+				grid.add(new Label(GROUP_DESCRIPTIONS[counter]), 0, counter);
+			} else {
+				grid.add(new Label(GROUP_DESCRIPTIONS[counter]), 0, counter + OFFSET_CUSTOM_TAGS);
+			}
 		}
 		
 		tagCheckBoxes = new CheckBox[tags.length];
@@ -110,12 +119,22 @@ public class SkillMain extends Application{
 		
 		//adds the checkboxes to the grid with their handlers. Two for loops since we have a different number
 		//of checkboxes in each row
+		//the if else is because the costum tags are seperated by a Seperator and hence need to be an additional row further down
+		//than the rest
 		int colCounter = CHECKBOXES_START_COL;
 		for(int rowCounter = 0; rowCounter < NUMBER_OF_CHECKBOX_ROWS; rowCounter ++){
-			for(int counter = END_INDEX_OF_CHECKBOX_ROWS[rowCounter]; counter < END_INDEX_OF_CHECKBOX_ROWS[rowCounter + 1]; counter++){
-				grid.add(tagCheckBoxes[counter], colCounter, rowCounter);
-				addCheckBoxHandler(tags[counter], tagCheckBoxes[counter], skillFilter, grid);
-				colCounter++;
+			if(rowCounter < NUMBER_NORMAL_DESCRIPTIONS){
+				for(int counter = END_INDEX_OF_CHECKBOX_ROWS[rowCounter]; counter < END_INDEX_OF_CHECKBOX_ROWS[rowCounter + 1]; counter++){
+					grid.add(tagCheckBoxes[counter], colCounter, rowCounter);
+					addCheckBoxHandler(tags[counter], tagCheckBoxes[counter], skillFilter, grid);
+					colCounter++;
+				}
+			} else{
+				for(int counter = END_INDEX_OF_CHECKBOX_ROWS[rowCounter]; counter < END_INDEX_OF_CHECKBOX_ROWS[rowCounter + 1]; counter++){
+					grid.add(tagCheckBoxes[counter], colCounter, rowCounter + OFFSET_CUSTOM_TAGS);
+					addCheckBoxHandler(tags[counter], tagCheckBoxes[counter], skillFilter, grid);
+					colCounter++;
+				}
 			}
 			colCounter = CHECKBOXES_START_COL;
 		}
@@ -124,6 +143,9 @@ public class SkillMain extends Application{
 		Separator separatorTagsButton = new Separator(Orientation.HORIZONTAL);
 		GridPane.setConstraints(separatorTagsButton, SEPARATOR_COL_START, SEPARATOR_TAG_BUTTON_ROW, SEPARATOR_COL_SPAN, SEPARATOR_ROW_SPAN);
 		grid.add(separatorTagsButton, SEPARATOR_COL_START, SEPARATOR_TAG_BUTTON_ROW);
+		Separator separatorCostumTags = new Separator(Orientation.HORIZONTAL);
+		GridPane.setConstraints(separatorCostumTags, SEPARATOR_COL_START, SEPARATOR_CUSTOM_TAG_BUTTON_ROW, SEPARATOR_COL_SPAN, SEPARATOR_ROW_SPAN);
+		grid.add(separatorCostumTags, SEPARATOR_COL_START, SEPARATOR_CUSTOM_TAG_BUTTON_ROW);
 		Separator separatorVertical = new Separator(Orientation.VERTICAL);
 		GridPane.setConstraints(separatorVertical, SEPARATOR_VERTICAL_COL, SEPARATOR_VERTICAL_START_ROW, SEPARATOR_VERTICAL_COL_SPAN, SEPARATOR_VERTICAL_ROW_SPAN);
 		grid.add(separatorVertical, SEPARATOR_VERTICAL_COL, SEPARATOR_VERTICAL_START_ROW);
@@ -184,12 +206,7 @@ public class SkillMain extends Application{
 		}
 		skillAccordion = new Accordion();
 		ArrayList<Skill> matchedSkills = new ArrayList<Skill>();
-		try {
-			matchedSkills = skillFilter.filter();
-		} catch (NoSuchFilterCriteriumException e) {
-			ErrorFileWriter.logError("Could not find the prime belonging to criterium " + e.getMissingCriterium());
-			System.exit(0);
-		}
+		matchedSkills = skillFilter.filter();
 		disableUnavailableCheckBoxes(matchedSkills, skillFilter);
 		skillPanes = new TitledPane[matchedSkills.size()];
 		Skill currentSkill;
@@ -207,17 +224,12 @@ public class SkillMain extends Application{
 	
 	public void disableUnavailableCheckBoxes(ArrayList<Skill> matchedSkills, SkillFilter skillFilter){
 		for(int tagIndex = 0; tagIndex < tags.length; tagIndex++){
-			int prime = 0;
 			boolean fitsASkill = false;
-			try {
-				 prime = skillFilter.getPrime(tags[tagIndex]);
-			} catch (NoSuchFilterCriteriumException e) {
-				ErrorFileWriter.logError("Could not find the prime belonging to criterium " + e.getMissingCriterium());
-				System.exit(0);
-			}
 			for(Skill skill: matchedSkills){
-				if(skill.getPrimeTotal()%prime == 0){
-					fitsASkill = true;
+				for(String skillAttribute: skill.getAttributes()){
+					if(skillAttribute.equals(tags[tagIndex])){
+						fitsASkill = true;
+					}
 				}
 			}
 			if(!fitsASkill && !tagCheckBoxes[tagIndex].isDisabled()){

@@ -1,7 +1,6 @@
 package poe_skills;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * can filter a list of Path of Exile skills based on a list of criteria
@@ -12,8 +11,9 @@ import java.util.HashMap;
  */
 public class SkillFilter {
 
-	private final int[] primeNumbers = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113};
-	private HashMap<String, Integer> attribute_to_prime;
+	//primes are not in order since the last primes will be used often - try to minimize the total
+//	private final int[] primeNumbers = {2, 3, 5, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149,
+//			151, 157, 163, 7, 11, 13, 17, 19, 23, 167, 173};
 	private ArrayList<String> activeFilterCriteria = new ArrayList<>();
 	private ArrayList<Skill> allSkills;
 
@@ -29,15 +29,30 @@ public class SkillFilter {
 	 * @param toFilter a list of skills you want to filter
 	 * @param criteria the criteria you want to filter the list of skills by
 	 * @return a list that contains the skills that matched the criteria
-	 * @throws NoSuchFilterCriteriumException if a criterium can not be assigned a prime number
 	 */
-	public ArrayList<Skill> filter(ArrayList<Skill> toFilter, ArrayList<String> criteria) throws NoSuchFilterCriteriumException{
-		int filterValue = getFilterValue(criteria);
+	public ArrayList<Skill> filter(ArrayList<Skill> toFilter, ArrayList<String> criteria){
 		ArrayList<Skill> resultSet = new ArrayList<>();
 
 		for(Skill currentSkill: toFilter){
-			if(currentSkill.getPrimeTotal()%filterValue == 0){
+			boolean containsAllCriteria = true;
+			for(String criterium: criteria){
+				boolean containsCriterium = false;
+				for(String skillAttribute: currentSkill.getAttributes()){
+					if(criterium.equals(skillAttribute)){
+						containsCriterium = true;
+					}
+				}
+				if(!containsCriterium){
+					containsAllCriteria = false;
+					break;
+				} else{
+					containsCriterium = false;
+				}
+			}
+			if(containsAllCriteria){
 				resultSet.add(currentSkill);
+			} else{
+				containsAllCriteria = true;
 			}
 		}
 		return resultSet;
@@ -52,43 +67,9 @@ public class SkillFilter {
 	 * skill aswell. This works due to the nature of prime numbers to only be divisible by 1 and themselves with
 	 * a remainder of 0.
 	 * @returna list that contains the skills that matched the criteria stored in the instance of this class
-	 * @throws NoSuchFilterCriteriumException if a criterium can not be assigned a prime number
 	 */
-	public ArrayList<Skill> filter() throws NoSuchFilterCriteriumException{
+	public ArrayList<Skill> filter(){
 		return filter(allSkills, activeFilterCriteria);
-	}
-	
-	/**
-	 * calculates the combined value of the criteria in the Array
-	 * 
-	 * @param criteria the criteria searched for
-	 * @return value based on the criteria
-	 * @throws NoSuchFilterCriteriumException if a criterium can not be matched to a prime
-	 */
-	public int getFilterValue(ArrayList<String> criteria) throws NoSuchFilterCriteriumException{
-		int result = 1;
-		for(String criterium: criteria){
-			try{
-				result = result * attribute_to_prime.get(criterium);
-			} catch(NullPointerException e){
-				throw new NoSuchFilterCriteriumException(criterium);
-			}
-		}
-		return result;
-	}
-	
-	/**
-	 * 
-	 * @param criterium the criterium that we want the corresponding prime from
-	 * @return the corresponding prime to the criterium
-	 * @throws NoSuchFilterCriteriumException
-	 */
-	public int getPrime(String criterium) throws NoSuchFilterCriteriumException{
-		try{
-			return attribute_to_prime.get(criterium);
-		} catch(NullPointerException e){
-			throw new NoSuchFilterCriteriumException(criterium);
-		}
 	}
 	
 	/**
@@ -134,10 +115,7 @@ public class SkillFilter {
 	 * @param argumentPart
 	 */
 	public void addCriterium(String argumentPart){
-		String[] arguments = argumentPart.split(" ");
-		for(String argument: arguments){
-			activeFilterCriteria.add(argument);
-		}
+		activeFilterCriteria.add(argumentPart);
 	}
 	
 	/**
@@ -146,10 +124,7 @@ public class SkillFilter {
 	 * @param argumentPart
 	 */
 	public void removeCriterium(String argumentPart){
-		String[] arguments = argumentPart.split(" ");
-		for(String argument: arguments){
-			activeFilterCriteria.remove(argument);
-		}
+		activeFilterCriteria.remove(argumentPart);
 	}
 	
 	/**
@@ -158,17 +133,12 @@ public class SkillFilter {
 	 */
 	public void showSkills(){
 		ArrayList<Skill> filteredSkills;
-		try {
-			filteredSkills = filter(allSkills, activeFilterCriteria);
-			if(!filteredSkills.isEmpty()){
-				printSkillList(filteredSkills);
-			} else{
-				System.out.println("No skills matching filtercriteria found. Criteria are: ");
-				System.out.println(activeFilterCriteria);
-			}
-		} catch (NoSuchFilterCriteriumException e) {
-			ErrorFileWriter.logError("Could not find a criterium named " + e.getMissingCriterium());
-			System.exit(0);
+		filteredSkills = filter(allSkills, activeFilterCriteria);
+		if(!filteredSkills.isEmpty()){
+			printSkillList(filteredSkills);
+		} else{
+			System.out.println("No skills matching filtercriteria found. Criteria are: ");
+			System.out.println(activeFilterCriteria);
 		}
 	}
 	
@@ -203,12 +173,8 @@ public class SkillFilter {
 	 * fills the attribute_to_prime Map with values
 	 */
 	public SkillFilter(){
-		attribute_to_prime = new HashMap<>(SkillMain.tags.length);
-		for(int counter = 0; counter < SkillMain.tags.length; counter++){
-			attribute_to_prime.put(SkillMain.tags[counter], primeNumbers[counter]);
-		}
 		allSkills = new ArrayList<>(SkillMain.MAX_NUMBER_OF_SKILLS);
-		InitReader initReader = new InitReader(this);
+		InitReader initReader = new InitReader();
 		allSkills = initReader.read();
 	}
 	

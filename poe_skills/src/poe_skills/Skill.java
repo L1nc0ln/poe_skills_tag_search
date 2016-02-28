@@ -12,7 +12,6 @@ public class Skill {
 	private final int MAX_NUM_ATTRIBUTES = 10;
 	private String skillName;
 	private String[] attributes;
-	private int primeTotal;
 	private String skillDescription;
 	private TitledPane skillPane;
 	
@@ -23,12 +22,11 @@ public class Skill {
 	 * @param primeTotal the total of all the primes that go with the tags of this skill multiplied with each other
 	 * @param skillDescription the description of the skill, taken from http://pathofexile.gamepedia.com/
 	 */
-	public Skill(final String skillName, final String[] attributes, final int primeTotal,
+	public Skill(final String skillName, final String[] attributes,
 			final String skillDescription, TitledPane skillPane){
 		this.skillName = skillName;
 		this.attributes = new String[MAX_NUM_ATTRIBUTES];
 		this.attributes = attributes;
-		this.primeTotal = primeTotal;
 		this.skillDescription = skillDescription;
 		this.skillPane = skillPane;
 	}
@@ -47,14 +45,6 @@ public class Skill {
 	 */
 	public String[] getAttributes() {
 		return attributes;
-	}
-
-	/**
-	 * 
-	 * @return the Multiplicative of all the primes that go with an attribute of this skill
-	 */
-	public int getPrimeTotal() {
-		return primeTotal;
 	}
 
 	/**

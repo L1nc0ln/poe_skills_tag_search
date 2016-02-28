@@ -40,7 +40,6 @@ public class InitReader {
 	private final int TABLE_COL_SPAN = 8;
 	private final int TABLE_ROW_SPAN = 1;
 	private final int TABLE_PREF_WIDTH = 100;
-	private SkillFilter skillFilter;
 	
 
 	/**
@@ -133,12 +132,11 @@ public class InitReader {
 				skillPane.setExpanded(false);
 				
 				//finally create the skill and add it to the list
-				createSkill = new Skill(skillName, attributes, skillFilter.getFilterValue(attributeList),
-						skillDescription, skillPane);
+				createSkill = new Skill(skillName, attributes, skillDescription, skillPane);
 				allSkills.add(createSkill);
 				arrayPosition++;
 			}
-		} catch (IOException | NoSuchFilterCriteriumException e) {
+		} catch (IOException e) {
 			ErrorFileWriter.logError("ERROR while reading line: " + arrayPosition);
 			System.exit(0);
 		}
@@ -182,14 +180,6 @@ public class InitReader {
 			attributeList.add(attribute);
 		}
 		return attributeList;
-	}
-	
-	/**
-	 * assigns the skillFilter
-	 * @param skillFilter the skillFilter to use, needed for knowing which criterium belongs to which prime
-	 */
-	public InitReader(SkillFilter skillFilter){
-		this.skillFilter = skillFilter;
 	}
 	
 }
