@@ -52,7 +52,7 @@ public class SkillMain extends Application{
 	private final int ACCORDION_START_COL = 0;
 	private final int ACCORDION_COL_SPAN = 10;
 	private final int ACCORDION_ROW_SPAN = 1;
-	private final int SKILLLIST_SCROLLPANE_PREF_HEIGHT = 600;
+	private final int SKILLLIST_SCROLLPANE_PREF_HEIGHT = 800;
 	private final int SKILLLIST_SCROLLPANE_PREF_WIDTH = 1200;
 	private final int SEPARATOR_COL_SPAN = 10;
 	private final int SEPARATOR_ROW_SPAN = 1;
@@ -60,7 +60,7 @@ public class SkillMain extends Application{
 	private final int SEPARATOR_TAG_BUTTON_ROW = 6;
 	private final int SEPARATOR_CUSTOM_TAG_BUTTON_ROW = END_INDEX_OF_CHECKBOX_ROWS.length + 1;
 	private final int SEPARATOR_VERTICAL_COL_SPAN = 1;
-	private final int SEPARATOR_VERTICAL_ROW_SPAN = 6;
+	private final int SEPARATOR_VERTICAL_ROW_SPAN = END_INDEX_OF_CHECKBOX_ROWS.length + 1;
 	private final int SEPARATOR_VERTICAL_COL = 1;
 	private final int SEPARATOR_VERTICAL_START_ROW = 0;
 	private final int WINDOW_HEIGHT = 600;
