@@ -22,7 +22,7 @@ The program as .zip with scripts to launch it under Windows and Linux is availab
 
 **Preview:**
 
-![alt tag](https://cloud.githubusercontent.com/assets/8633145/13379944/3c59e3d6-de35-11e5-9a36-9c2f0de8796b.PNG)
+![alt tag](https://cloud.githubusercontent.com/assets/8633145/13380907/28168bae-de4e-11e5-9236-656de305612e.PNG)
 
 Shoutout to https://github.com/D4ryus, without your suggestions and help this project wouldn't be here :D
 
